@@ -20,7 +20,7 @@ if [ "${SERVICE_NAME}" == "**ChangeMe**" -o -z "${SERVICE_NAME}" ]; then
 fi
 
 # Configure the cluster (replace required parameters)
-sleep 5
+sleep 20
 echo "=> Configuring PXC cluster"
 PXC_NODES=`dig +short ${SERVICE_NAME} | sort`
 export PXC_NODES=`echo ${PXC_NODES} | sed "s/ /,/g"`
