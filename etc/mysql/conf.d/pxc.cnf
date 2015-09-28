@@ -25,3 +25,9 @@ wsrep_cluster_name=pxc_rancher
 
 # Authentication for SST method
 wsrep_sst_auth="sstuser:PXC_SST_PASSWORD"
+
+# Recommended settings for WAN replication
+wsrep_provider_options = "evs.keepalive_period = PT3S;
+      evs.suspect_timeout = PT30S;
+      evs.inactive_timeout = PT1M;
+      evs.install_timeout = PT1M"
