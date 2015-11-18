@@ -31,7 +31,7 @@ if [ -z "${PXC_NODES}" ]; then
    echo "*** Exiting ..."
    exit 1
 fi
-export MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
+export MY_RANCHER_IP=$(curl http://rancher-metadata/2015-07-25/self/container/primary_ip)
 if [ -z "${MY_RANCHER_IP}" ]; then
    echo "*** ERROR: Could not determine this container Rancher IP - Exiting ..."
    exit 1
