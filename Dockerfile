@@ -15,6 +15,7 @@ ENV PXC_SST_PASSWORD **ChangeMe**
 ENV PXC_ROOT_PASSWORD **ChangeMe**
 env PXC_INIT_SQL **ChangeMe**
 ENV SERVICE_NAME pxc
+ENV SERVICE_NODE_COUNT 3
 
 ENV PXC_VOLUME /var/lib/mysql
 ENV PXC_CONF /etc/mysql/conf.d/pxc.cnf
