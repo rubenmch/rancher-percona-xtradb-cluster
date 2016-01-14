@@ -25,30 +25,32 @@ echo "=> Configuring PXC cluster"
 PXC_NODES=`dig +short ${SERVICE_NAME} | sort`
 CURRENT_NODE_COUNT=`echo ${PXC_NODES} | wc -w`
 if [ "${CURRENT_NODE_COUNT}" != "${SERVICE_NODE_COUNT}" ]; then
-   echo "*** WARNING: Wrong node count ${CURRENT_NODE_COUNT}, waiting ${NODE_COUNT_FIRST_RETRY_SECONDS} seconds to retry."
+   echo "*** WARNING: Wrong node count ${CURRENT_NODE_COUNT} ${PXC_NODES}, waiting ${NODE_COUNT_FIRST_RETRY_SECONDS} seconds to retry."
    sleep ${NODE_COUNT_FIRST_RETRY_SECONDS}
 fi
 PXC_NODES=`dig +short ${SERVICE_NAME} | sort`
 CURRENT_NODE_COUNT=`echo ${PXC_NODES} | wc -w`
 if [ "${CURRENT_NODE_COUNT}" != "${SERVICE_NODE_COUNT}" ]; then
-   echo "*** WARNING: Wrong node count ${CURRENT_NODE_COUNT}, waiting ${NODE_COUNT_SECOND_RETRY_SECONDS} seconds to retry."
+   echo "*** WARNING: Wrong node count ${CURRENT_NODE_COUNT} ${PXC_NODES}, waiting ${NODE_COUNT_SECOND_RETRY_SECONDS} seconds to retry."
    sleep ${NODE_COUNT_SECOND_RETRY_SECONDS}
 fi
 PXC_NODES=`dig +short ${SERVICE_NAME} | sort`
 CURRENT_NODE_COUNT=`echo ${PXC_NODES} | wc -w`
 if [ "${CURRENT_NODE_COUNT}" != "${SERVICE_NODE_COUNT}" ]; then
-   echo "*** ERROR: Could not determine which containers are part of this service."
+   echo "*** ERROR: Could not determine which containers are part of this service, found ${PXC_NODES}."
    echo "*** Is this service named \"${SERVICE_NAME}\"? If not, please regenerate the service"
    echo "*** and add SERVICE_NAME environment variable which value should be equal to this service name"
    echo "*** Exiting ..."
    exit 1
 fi
+echo "Found the following nodes: ${PXC_NODES}"
 export PXC_NODES=`echo ${PXC_NODES} | sed "s/ /,/g"`
 export MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
 if [ -z "${MY_RANCHER_IP}" ]; then
    echo "*** ERROR: Could not determine this container Rancher IP - Exiting ..."
    exit 1
 fi
+echo "Self IP: ${MY_RANCHER_IP}"
 change_pxc_nodes.sh "${PXC_NODES}"
 echo "root:${PXC_ROOT_PASSWORD}" | chpasswd
 perl -p -i -e "s/PXC_SST_PASSWORD/${PXC_SST_PASSWORD}/g" ${PXC_CONF}
